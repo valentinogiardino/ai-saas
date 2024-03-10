@@ -6,7 +6,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { FileAudio, Music, Send } from "lucide-react";
+import { FileAudio } from "lucide-react";
 
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
@@ -17,9 +17,9 @@ import { Empty } from "@/components/empty";
 
 import { formSchema } from "./constants";
 
-const MusicPage = () => {
+const VideoPage = () => {
   const router = useRouter();
-  const [music, setMusic] = useState<string>();
+  const [video, setVideo] = useState<string>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -32,12 +32,12 @@ const MusicPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setMusic(undefined);
+      setVideo(undefined);
 
-      const response = await axios.post('/api/music', values);
+      const response = await axios.post('/api/video', values);
       console.log(response)
 
-      setMusic(response.data.audio);
+      setVideo(response.data[0]);
       form.reset();
     } catch (error: any) {
       
@@ -80,7 +80,7 @@ const MusicPage = () => {
                     <Input
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                       disabled={isLoading} 
-                      placeholder="Piano solo" 
+                      placeholder="Clown fish swimming in a coral reef" 
                       {...field}
                     />
                   </FormControl>
@@ -97,17 +97,17 @@ const MusicPage = () => {
             <Loader />
           </div>
         )}
-        {!music && !isLoading && (
-          <Empty label="No music generated." />
+        {!video && !isLoading && (
+          <Empty label="No video generated." />
         )}
-        {music && (
-          <audio controls className="w-full mt-8">
-            <source src={music} />
-          </audio>
+        {video && (
+          <video controls className="w-full aspect-video mt-8 rounded-lg border bg-black">
+            <source src={video} />
+          </video>
         )}
       </div>
     </div>
    );
 }
  
-export default MusicPage;
+export default VideoPage;
