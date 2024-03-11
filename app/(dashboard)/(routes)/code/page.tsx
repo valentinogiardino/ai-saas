@@ -23,7 +23,7 @@ import { useProModal } from "@/hooks/use-pro-modal";
 import toast from "react-hot-toast";
 
 const CodePage = () => {
-  const proModal = useProModal()
+  const proModal = useProModal();
   const router = useRouter();
   const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,10 +50,10 @@ const CodePage = () => {
 
       form.reset();
     } catch (error: any) {
-      if(error?.response?.status === 403){
-        proModal.onOpen()
-      }else{
-        toast.error("Something went wrong")
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error("Something went wrong");
       }
     } finally {
       router.refresh();
@@ -134,7 +134,18 @@ const CodePage = () => {
                   }}
                   className="text-sm overflow-hidden leading-7"
                 >
-                  {message.content! || ""}
+                  {Array.isArray(message.content)
+                  ? message.content
+                      .map((part, partIndex) => {
+                        if ("text" in part) {
+                          return <span key={partIndex}>{part.text}</span>;
+                        } else {
+                          // Handle 'ChatCompletionContentPartImage' case here
+                          return null;
+                        }
+                      })
+                      .join("")
+                  : message.content || ""}
                 </ReactMarkdown>
               </div>
             ))}
