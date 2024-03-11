@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/sheet";
 import Sidebar from "./sidebar";
 
-const MobilSidebar = () => {
+interface ModalSideBarProps {
+  apiLimitCount: number
+}
+
+const MobilSidebar = ({ apiLimitCount }: ModalSideBarProps) => {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
@@ -31,7 +35,7 @@ const MobilSidebar = () => {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0">
-        <Sidebar />
+        <Sidebar apiLimitCount={apiLimitCount}/>
       </SheetContent>
     </Sheet>
   );
